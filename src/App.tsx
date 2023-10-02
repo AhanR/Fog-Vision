@@ -14,17 +14,13 @@ function App() {
     console.log('Local path:', localPath);
     setPath(localPath);
   }
-
-  const [segModel, setSegModel] = useState<tf.LayersModel>();
-  const [dehazeModel, setDehazeModel] = useState<tf.LayersModel>();
+  const [model, setModel] = useState<tf.LayersModel>();
 
   useEffect(() => {
     const loadModel = async () => {
       try {
-        const segModelLoad = await tf.loadLayersModel("/models/imageSegModel/model.json");
-        setSegModel(segModelLoad);
-        const dehazeModelLoad = await tf.loadLayersModel("/models/dehazeModel/model.json");
-        setDehazeModel(dehazeModelLoad);
+        const _model = await tf.loadLayersModel("/models/model/model.json");
+        setModel(_model);
       } catch (error) {
         console.error('Error loading the model:', error);
       }
@@ -35,8 +31,7 @@ function App() {
 
   return (
     <div className="App md:px-[30%] min-h-screen">
-      {segModel? "": <div className="p-2 font-display">Loading segmentation model...</div>}
-      {dehazeModel? "": <div className="p-2 font-display">Loading dehazing model...</div>}
+      {model? "": <div className="p-2 font-display">Loading Model...</div>}
       <div className=" text-3xl p-2 font-bold text-center bg-neutral-600 rounded-md mx-2 font-display">FOG VISION</div>
       {path==""? 
         <div
@@ -51,7 +46,7 @@ function App() {
             }}
           >Use Default Test Video</button>
         </div>:
-        <VideoEncoder path={path} segModel={segModel} dehazeModel={dehazeModel}/>
+        <VideoEncoder path={path} model={model}/>
       }
     </div>
   )

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import * as tf from "@tensorflow/tfjs"
 import KMeans from 'tf-kmeans';
 
-export default function VideoEncoder(props : { path : string, segModel : any, dehazeModel : any }) {
+export default function VideoEncoder(props : { path : string, model : any}) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const outCanvRef = useRef(null);
@@ -12,12 +12,6 @@ export default function VideoEncoder(props : { path : string, segModel : any, de
     const [lastTime, setLastTime] = useState(Date.now())
     const [fps, setFps] = useState(0);
     const [framenumber, setFramenumber] = useState(1);
-
-    const kmeans = new KMeans({
-        k: 4,
-        maxIter: 3,
-        distanceFunction: KMeans.EuclideanDistance
-    })
 
     const extractFrames = async () => {
         console.log("extracting the frames");
@@ -39,11 +33,6 @@ export default function VideoEncoder(props : { path : string, segModel : any, de
 
         const context = canvas.getContext('2d');
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        // const frameData = canvas.toDataURL('image/jpeg');
-        // frames.push(frameData);
-
-
         
         const pred = await tf.tidy(()=>{
             // You can do something with the extracted frame here, like displaying it, saving it, etc.
